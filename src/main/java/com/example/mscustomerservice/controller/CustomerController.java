@@ -1,7 +1,9 @@
 package com.example.mscustomerservice.controller;
 
 import com.example.mscustomerservice.dto.BusinessCustomerDTO;
+import com.example.mscustomerservice.dto.BusinessPymeCustomerDTO;
 import com.example.mscustomerservice.dto.PersonalCustomerDTO;
+import com.example.mscustomerservice.dto.PersonalVipCustomerDTO;
 import com.example.mscustomerservice.model.Customer;
 import com.example.mscustomerservice.model.CustomerType;
 import com.example.mscustomerservice.service.CustomerService;
@@ -70,5 +72,31 @@ public class CustomerController {
     @GetMapping("/document/{documentNumber}")
     public Mono<Customer> getCustomerByDocumentNumber(@PathVariable String documentNumber) {
         return customerService.findByDocumentNumber(documentNumber);
+    }
+
+    @PostMapping("/personal-vip")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Customer> createPersonalVipCustomer(@Valid @RequestBody PersonalVipCustomerDTO customerDTO) {
+        return customerService.createPersonalVipCustomer(customerDTO);
+    }
+
+    @PostMapping("/business-pyme")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Customer> createBusinessPymeCustomer(@Valid @RequestBody BusinessPymeCustomerDTO customerDTO) {
+        return customerService.createBusinessPymeCustomer(customerDTO);
+    }
+
+    @PutMapping("/personal-vip/{id}")
+    public Mono<Customer> updatePersonalVipCustomer(
+            @PathVariable String id,
+            @Valid @RequestBody PersonalVipCustomerDTO customerDTO) {
+        return customerService.updatePersonalVipCustomer(id, customerDTO);
+    }
+
+    @PutMapping("/business-pyme/{id}")
+    public Mono<Customer> updateBusinessPymeCustomer(
+            @PathVariable String id,
+            @Valid @RequestBody BusinessPymeCustomerDTO customerDTO) {
+        return customerService.updateBusinessPymeCustomer(id, customerDTO);
     }
 }

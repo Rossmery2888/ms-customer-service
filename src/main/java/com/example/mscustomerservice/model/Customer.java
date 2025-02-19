@@ -25,4 +25,8 @@ public class Customer {
     private String businessName;
     private String ruc;
     private String businessType;
+
+    // VIP and PYME
+    private Boolean hasCreditCard;
+    private Double monthlyAverageBalance;
 }
