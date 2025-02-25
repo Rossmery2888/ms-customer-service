@@ -1,9 +1,6 @@
 package com.example.mscustomerservice.controller;
 
-import com.example.mscustomerservice.dto.BusinessCustomerDTO;
-import com.example.mscustomerservice.dto.BusinessPymeCustomerDTO;
-import com.example.mscustomerservice.dto.PersonalCustomerDTO;
-import com.example.mscustomerservice.dto.PersonalVipCustomerDTO;
+import com.example.mscustomerservice.dto.*;
 import com.example.mscustomerservice.model.Customer;
 import com.example.mscustomerservice.model.CustomerType;
 import com.example.mscustomerservice.service.CustomerService;
@@ -98,5 +95,19 @@ public class CustomerController {
             @PathVariable String id,
             @Valid @RequestBody BusinessPymeCustomerDTO customerDTO) {
         return customerService.updateBusinessPymeCustomer(id, customerDTO);
+    }
+    @GetMapping("/{id}/summary")
+    public Mono<CustomerSummaryDTO> getCustomerSummary(@PathVariable String id) {
+        return customerService.getCustomerConsolidatedSummary(id);
+    }
+
+    @GetMapping("/{id}/debt-status")
+    public Mono<DebtStatusDTO> getCustomerDebtStatus(@PathVariable String id) {
+        return customerService.validateOverdueDebt(id);
+    }
+
+    @GetMapping("/{id}/product-report")
+    public Mono<ProductReportDTO> getCustomerProductReport(@PathVariable String id) {
+        return customerService.generateProductReport(id);
     }
 }

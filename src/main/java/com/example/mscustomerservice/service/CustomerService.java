@@ -1,9 +1,6 @@
 package com.example.mscustomerservice.service;
 
-import com.example.mscustomerservice.dto.BusinessCustomerDTO;
-import com.example.mscustomerservice.dto.BusinessPymeCustomerDTO;
-import com.example.mscustomerservice.dto.PersonalCustomerDTO;
-import com.example.mscustomerservice.dto.PersonalVipCustomerDTO;
+import com.example.mscustomerservice.dto.*;
 import com.example.mscustomerservice.model.Customer;
 import com.example.mscustomerservice.model.CustomerType;
 import reactor.core.publisher.Flux;
@@ -23,4 +20,8 @@ public interface CustomerService {
     Mono<Customer> createBusinessPymeCustomer(BusinessPymeCustomerDTO customerDTO);
     Mono<Customer> updatePersonalVipCustomer(String id, PersonalVipCustomerDTO customerDTO);
     Mono<Customer> updateBusinessPymeCustomer(String id, BusinessPymeCustomerDTO customerDTO);
+
+    Mono<CustomerSummaryDTO> getCustomerConsolidatedSummary(String customerId);
+    Mono<DebtStatusDTO> validateOverdueDebt(String customerId);
+    Mono<ProductReportDTO> generateProductReport(String customerId);
 }
