@@ -1,0 +1,393 @@
+openapi: 3.0.3
+info:
+  title: Credit Card Service API
+  description: API para la gestión de tarjetas de crédito
+  version: 1.0.0
+servers:
+  - url: http://localhost:8085
+    description: Servidor de desarrollo
+  - url: http://api-gateway:8080/credit-cards
+    description: API Gateway
+
+tags:
+  - name: credit-cards
+    description: Operaciones con tarjetas de crédito
+
+paths:
+  /credit-cards:
+    get:
+      tags:
+        - credit-cards
+      summary: Obtener todas las tarjetas de crédito
+      description: Retorna un listado de todas las tarjetas de crédito registradas
+      operationId: getAllCreditCards
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditCardDto'
+    post:
+      tags:
+        - credit-cards
+      summary: Crear una nueva tarjeta de crédito
+      description: Crea una nueva tarjeta de crédito con los datos proporcionados
+      operationId: createCreditCard
+      requestBody:
+        description: Datos de la tarjeta de crédito a crear
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardDto'
+        required: true
+      responses:
+        '201':
+          description: Tarjeta de crédito creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /credit-cards/{id}:
+    get:
+      tags:
+        - credit-cards
+      summary: Obtener tarjeta de crédito por ID
+      description: Retorna una tarjeta de crédito específica según su ID
+      operationId: getCreditCardById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - credit-cards
+      summary: Actualizar tarjeta de crédito
+      description: Actualiza los datos de una tarjeta de crédito existente
+      operationId: updateCreditCard
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos de la tarjeta de crédito a actualizar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardDto'
+        required: true
+      responses:
+        '200':
+          description: Tarjeta de crédito actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - credit-cards
+      summary: Eliminar tarjeta de crédito
+      description: Elimina una tarjeta de crédito según su ID
+      operationId: deleteCreditCard
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Tarjeta de crédito eliminada
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /credit-cards/customer/{customerId}:
+    get:
+      tags:
+        - credit-cards
+      summary: Obtener tarjetas de crédito por cliente
+      description: Retorna todas las tarjetas de crédito asociadas a un cliente
+      operationId: getCreditCardsByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          description: ID del cliente
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditCardDto'
+
+  /credit-cards/number/{cardNumber}:
+    get:
+      tags:
+        - credit-cards
+      summary: Obtener tarjeta de crédito por número
+      description: Retorna una tarjeta de crédito específica según su número
+      operationId: getCreditCardByNumber
+      parameters:
+        - name: cardNumber
+          in: path
+          description: Número de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /credit-cards/{id}/balance:
+    get:
+      tags:
+        - credit-cards
+      summary: Consultar saldo de tarjeta de crédito
+      description: Retorna el saldo disponible de una tarjeta de crédito
+      operationId: getCreditCardBalance
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardBalanceDto'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /credit-cards/{id}/consumption:
+    put:
+      tags:
+        - credit-cards
+      summary: Registrar consumo en tarjeta de crédito
+      description: Registra un consumo en una tarjeta de crédito
+      operationId: registerConsumption
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: Monto del consumo
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '200':
+          description: Consumo registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '400':
+          description: Error en la operación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /credit-cards/{id}/payment:
+    put:
+      tags:
+        - credit-cards
+      summary: Realizar pago a tarjeta de crédito
+      description: Registra un pago a una tarjeta de crédito
+      operationId: payBalance
+      parameters:
+        - name: id
+          in: path
+          description: ID de la tarjeta de crédito
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: Monto del pago
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '200':
+          description: Pago registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardDto'
+        '400':
+          description: Error en la operación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Tarjeta de crédito no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreditCardDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "60c73def2aa3a75f5c5d0f7g"
+        cardNumber:
+          type: string
+          example: "5123-4567-8901-2345"
+        customerId:
+          type: string
+          example: "60c73def2aa3a75f5c5d0f7b"
+        customerType:
+          type: string
+          enum: [PERSONAL, BUSINESS]
+          example: "PERSONAL"
+        creditLimit:
+          type: number
+          format: double
+          example: 10000.00
+        availableBalance:
+          type: number
+          format: double
+          example: 8500.00
+        expirationDate:
+          type: string
+          format: date
+          example: "2027-07-15"
+        cvv:
+          type: string
+          example: "123"
+      required:
+        - customerId
+        - customerType
+        - creditLimit
+
+    CreditCardBalanceDto:
+      type: object
+      properties:
+        creditCardId:
+          type: string
+          example: "60c73def2aa3a75f5c5d0f7g"
+        cardNumber:
+          type: string
+          example: "5123-4567-8901-2345"
+        creditLimit:
+          type: number
+          format: double
+          example: 10000.00
+        availableBalance:
+          type: number
+          format: double
+          example: 8500.00
+        usedBalance:
+          type: number
+          format: double
+          example: 1500.00
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2023-07-15T12:00:00Z"
+        status:
+          type: integer
+          format: int32
+          example: 404
+        error:
+          type: string
+          example: "Not Found"
+        message:
+          type: string
+          example: "Credit card not found with id: 60c73def2aa3a75f5c5d0f7g"
